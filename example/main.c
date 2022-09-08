@@ -41,6 +41,11 @@ void autodetectall()
 		continue; // found a MD pad, 3 or 6 buttons
 	}
 
+	inlib_readSportsPad_markIII(i);
+	if (d->type == INLIB_TYPE_SPORTSPAD_MARKIII) {
+		continue; // found a Paddle
+	}
+
 	inlib_readPaddle(i);
 	if (d->type == INLIB_TYPE_PADDLE) {
 		continue; // found a Paddle
@@ -61,6 +66,7 @@ void autodetectall()
 void main(void)
 {
   char i, j, y;
+
 
   /* Clear VRAM */
   SMS_VRAMmemsetW(0, 0x0000, 16384);
@@ -105,11 +111,14 @@ void main(void)
 		}
 		else {
 			// Otherwise try everything else for hotswapability
-			inlib_readMDmouse(i);
+			inlib_readSportsPad_markIII(i);
 			if (d->type == INLIB_TYPE_NONE) {
-				inlib_readPaddle(i);
+				inlib_readMDmouse(i);
 				if (d->type == INLIB_TYPE_NONE) {
-					inlib_readMDpad(i);
+					inlib_readPaddle(i);
+					if (d->type == INLIB_TYPE_NONE) {
+						inlib_readMDpad(i);
+					}
 				}
 			}
 		}
@@ -137,6 +146,9 @@ void main(void)
 		}
 		if (INLIB_ISRELATIVE16(d->type)) {
 			printf("Relative 16-bit: %d,%d      ", d->rel16.x, d->rel16.y);
+		}
+		if (INLIB_ISABSOLUTE(d->type)) {
+			printf("Absolute: %3d,%3d      ", d->rel16.x, d->rel16.y);
 		}
 
     }
