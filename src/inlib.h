@@ -59,6 +59,8 @@ struct inlibDevice {
 #define INLIB_BTN_MD_X     0x400
 #define INLIB_BTN_MD_MODE  0x800
 
+#define INLIB_BTN_ANYDIR   (INLIB_BTN_UP|INLIB_BTN_DOWN|INLIB_BTN_LEFT|INLIB_BTN_RIGHT)
+
 // Initialize library internals
 void inlib_init(void);
 
