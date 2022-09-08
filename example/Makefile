@@ -26,11 +26,13 @@ all: $(PROGNAME).sms
 %.rel: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
-$(PROGNAME).ihx: $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(CRT0) $(SMSLIB_LIB) $(INLIB_LIB) $^
+$(PROGNAME).ihx: $(OBJS) $(SMSLIB_LIB) $(INLIB_LIB)
+	$(CC) -o $@ $(LDFLAGS) $(CRT0) $(SMSLIB_LIB) $(INLIB_LIB) $(OBJS)
 
 $(PROGNAME).sms: $(PROGNAME).ihx
 	$(IHX2SMS) $< $@
 
 clean:
 	rm -f *.rel *.ihx *.asm *.sym *.lst *.noi *.lk *.map *.sms
+
+.PHONY: $(PROGNAME).ihx
