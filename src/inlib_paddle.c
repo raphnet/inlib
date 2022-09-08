@@ -101,48 +101,36 @@ wait_3_set_sync:
 wait_3_reset:
     dec d
     jp Z, paddle_timeout2
-    in a,(#0xDD)            ; ensure we are reading both ports same moment
-    ld e,a
-    in b,(c)
     in a,(#0xDD)
-    or e
     bit 3,a
-    jr nz, wait_3_reset     ; wait until bit 5 is 0
-    ld a,b
+    jr nz, wait_3_reset     ; wait until bit 3 is 0
+	in a,(#0xDC)
     and #0xC0               ; save upper 2 bits
-    rlca
-    rlca
-    ld l,a                  ; into l (bits 0,1)
-    ld a,e
+    ld l,a                  ; into l (bits 6,7)
+	in a,(#0xDD)
     and #0x03               ; save lower 2 bits
+	or l                    ; combine with l
+    rlca                    ; rotate to bits 0-3
     rlca
-    rlca
-    or l                    ; together with l
-    ld l,a                  ; into l (bits 2,3)
+    ld l,a                  ; store into l
 
     ld d, #255
 wait_3_set:
     dec d
     jp Z, paddle_timeout2
     in a,(#0xDD)            ; ensure we are reading both ports same moment
-    ld e,a
-    in b,(c)
-    in a,(#0xDD)
-    and e
     bit 3,a
-    jr z, wait_3_set        ; wait until bit 5 is 1
-    ld a,b
+    jr z, wait_3_set        ; wait until bit 3 is 1
+	in a,(#0xDC)
     and #0xC0               ; save upper 2 bits
-    rrca
-    rrca
-    ld h,a                  ; into h (bits 4,5)
-    ld a,e
+    ld h,a                  ; into h (bits 6,7)
+	in a,(#0xDD)
     and #0x03               ; save lower 2 bits
+	or h                    ; combine with h
+    rrca                    ; rotate to bits 4-7
     rrca
-    rrca
-    or h                    ; together with h (bits 6,7)
     or l                    ; together with lower part
-    ld l,a
+    ld l,a                  ; final byte into l
 
     ld a,#INLIB_TYPE_PADDLE
     ld (_inlib_portB+0), a
