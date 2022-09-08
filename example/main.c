@@ -61,13 +61,19 @@ void autodetectall()
 	// inlib_readSportsPad sets the type to SportsPad. Reset it to none.
 	d->type = INLIB_TYPE_NONE;
   }
-
 }
+
 
 void main(void)
 {
   char i, j, y;
 
+  /* Position and visiblity of mouse pointers */
+  unsigned char px[2] = { 64, 168 };
+  unsigned char py[2] = { 96, 96 };
+  char pvisible[2] = { 0, 0 };
+  unsigned char prev_x[2];
+  unsigned char prev_y[2];
 
   /* Clear VRAM */
   SMS_VRAMmemsetW(0, 0x0000, 16384);
@@ -77,6 +83,15 @@ void main(void)
   /* load a standard font character set into tiles 0-95,
    * set BG palette to B/W and turn on the screen */
   SMS_autoSetUpTextRenderer();
+
+  /* Tiles for numbers 1 and 2 are used as sprites for mouse
+   * pointers. Configure palette since the above does not
+   * set a sprite palette... */
+  SMS_setSpritePaletteColor(1, RGB(3,3,0));
+
+  /* We are using tiles from the font (index 17 and 18)
+   * which are in the first 256 tiles. */
+  SMS_useFirstHalfTilesforSprites(1);
 
   /* Set the target of the next background write */
   SMS_setNextTileatXY(1,0);
@@ -100,6 +115,8 @@ void main(void)
   for(;;) {
 
 	SMS_waitForVBlank();
+	SMS_copySpritestoSAT();
+	SMS_initSprites();
 
 	for (i=0; i<2; i++) {
 		struct inlibDevice *d = inlib_getPortPtr(i);
@@ -139,19 +156,33 @@ void main(void)
 		printf("                   ");
 
 		SMS_setNextTileatXY(3,y++);
+		pvisible[i] = 0;
 		if (INLIB_ISPADDLE(d->type)) {
 			printf("Paddle: %02x", d->paddle.value);
-		}
-		if (INLIB_ISRELATIVE(d->type)) {
+		} else if (INLIB_ISRELATIVE(d->type)) {
 			printf("Relative: %d,%d      ", d->rel.x, d->rel.y);
-		}
-		if (INLIB_ISRELATIVE16(d->type)) {
+		    pvisible[i] = 1;
+			px[i] += d->rel.x;
+			py[i] += d->rel.y;
+		} else if (INLIB_ISRELATIVE16(d->type)) {
 			printf("Relative 16-bit: %d,%d      ", d->rel16.x, d->rel16.y);
-		}
-		if (INLIB_ISABSOLUTE(d->type)) {
+		    pvisible[i] = 1;
+			px[i] += d->rel16.x;
+			py[i] += d->rel16.y;
+		} else if (INLIB_ISABSOLUTE(d->type)) {
 			printf("Absolute: %3d,%3d      ", d->abs.x, d->abs.y);
+		    pvisible[i] = 1;
+			px[i] += d->abs.x - prev_x[i];
+			py[i] += d->abs.y - prev_y[i];
+			prev_x[i] = d->abs.x;
+			prev_y[i] = d->abs.y;
 		}
 
+		if (pvisible[i]) {
+			SMS_addSprite(px[i], py[i], 16 + i);
+			SMS_setNextTileatXY(3,y++);
+			printf("Mouse: %03u,%03u", px[i], py[i]);
+		}
     }
   }
 }
