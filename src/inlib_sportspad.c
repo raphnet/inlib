@@ -5,6 +5,12 @@
 // by naked functions
 #pragma disable_warning 85
 
+// Target: 80us
+#define LOOPS_WAIT_FIRST_NIBBLE	14
+
+// Target: 40us
+#define LOOPS_WAIT_NIBBLE	4
+
 void inlib_readSportsPad(unsigned char port) __z88dk_fastcall __naked
 {
   __asm
@@ -21,7 +27,7 @@ read_sportspad_A:
 
   ;;; read nibble 1 (X upper bits)
   call _inlib_portA_TH_low
-  ld b, #16             ; Wait for data (about 80us)
+  ld b, #LOOPS_WAIT_FIRST_NIBBLE
 $1:
   nop
   djnz $1
@@ -34,7 +40,7 @@ $1:
 
   ;;; read nibble 2 (X lower bits)
   call _inlib_portA_TH_high
-  ld b, #8             ; Wait for data (about 40us)
+  ld b, #LOOPS_WAIT_NIBBLE
 $2:
   nop
   djnz $2
@@ -46,7 +52,7 @@ $2:
 
   ;;; read nibble 3 (Y upper bits)
   call _inlib_portA_TH_low
-  ld b, #8             ; Wait for data
+  ld b, #LOOPS_WAIT_NIBBLE
 $3:
   nop
   djnz $3
@@ -59,7 +65,7 @@ $3:
 
   ;;; read nibble 4 (Y lower bits)
   call _inlib_portA_TH_high
-  ld b, #8             ; Wait for data
+  ld b, #LOOPS_WAIT_NIBBLE
 $4:
   nop
   djnz $4
@@ -88,7 +94,7 @@ read_sportspad_B:
 
   ;;; read nibble 1 (X upper bits)
   call _inlib_portB_TH_low
-  ld b, #16             ; Wait for data (about 80us)
+  ld b, #LOOPS_WAIT_FIRST_NIBBLE
 $5:
   nop
   djnz $5
@@ -104,7 +110,7 @@ $5:
 
   ;;; read nibble 2 (X lower bits)
   call _inlib_portB_TH_high
-  ld b, #8             ; Wait for data (about 40us)
+  ld b, #LOOPS_WAIT_NIBBLE
 $6:
   nop
   djnz $6
@@ -125,7 +131,7 @@ $6:
 
   ;;; read nibble 3 (Y upper bits)
   call _inlib_portB_TH_low
-  ld b, #8              ; Wait for data (about 40us)
+  ld b, #LOOPS_WAIT_NIBBLE
 $7:
   nop
   djnz $7
@@ -141,7 +147,7 @@ $7:
 
   ;;; read nibble 3 (Y lower bits)
   call _inlib_portB_TH_high
-  ld b, #8             ; Wait for data (about 40us)
+  ld b, #LOOPS_WAIT_NIBBLE
 $8:
   nop
   djnz $8
