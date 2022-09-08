@@ -20,6 +20,7 @@ const char *getDeviceName(unsigned char type)
 		case INLIB_TYPE_PADDLE: return "Paddle";
 		case INLIB_TYPE_SPORTSPAD: return "Sports Pad";
 		case INLIB_TYPE_MDMOUSE: return "Mega Mouse";
+		case INLIB_TYPE_SPORTSPAD_MARKIII: return "Sports Pad (m3)";
 	}
 	return "Unknown";
 }
@@ -148,7 +149,7 @@ void main(void)
 			printf("Relative 16-bit: %d,%d      ", d->rel16.x, d->rel16.y);
 		}
 		if (INLIB_ISABSOLUTE(d->type)) {
-			printf("Absolute: %3d,%3d      ", d->rel16.x, d->rel16.y);
+			printf("Absolute: %3d,%3d      ", d->abs.x, d->abs.y);
 		}
 
     }
