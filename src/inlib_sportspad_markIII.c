@@ -64,6 +64,8 @@ void inlib_readSportsPad_markIII(unsigned char port) __z88dk_fastcall __naked
   jp NZ, read_m3_sportspad_B
 
 read_m3_sportspad_A:
+  ld bc, (#_inlib_portA + 1) ; Read current button bits
+  ld (#_inlib_portA + 3), bc ; Copy to previous button bits
 
   ld d, #0xff           ; timeout value
 
@@ -174,6 +176,8 @@ $99:
 
 
 read_m3_sportspad_B:
+  ld bc, (#_inlib_portB + 1) ; Read current button bits
+  ld (#_inlib_portB + 3), bc ; Copy to previous button bits
 
   ld d, #0xff           ; timeout value
 
