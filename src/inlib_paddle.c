@@ -102,11 +102,7 @@ wait_5_set:
 	ld (_inlib_portA+0), a
 
 	in a,(#0xDC)            ; Get button status (bit 4)
-	rrca                    ; Right-align
-	rrca
-	rrca
-	rrca
-	or a,#0xfe              ; Set unused bits
+	or a,#0xef              ; Set unused bits
 	cpl                     ; Invert bits
 	ld (_inlib_portA+1), a  ; Buttons lower byte
 	ld a,#0x00
@@ -189,9 +185,9 @@ wait_3_set:
 	ld (_inlib_portB+0), a
 
 	in a,(#0xDD)            ; Get button status (bit 2)
-	rrca                    ; Right-align
-	rrca
-	or a,#0xfe              ; Set unused bits
+	rlca                    ; Move to bit 4
+	rlca
+	or a,#0xef              ; Set unused bits
 	cpl                     ; Invert bits
 	ld (_inlib_portB+1), a  ; Buttons lower byte
 	ld a,#0x00
