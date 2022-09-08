@@ -45,8 +45,8 @@ Bit	Function
 */
 
 
-struct inlibDevice inlib_portA;
-struct inlibDevice inlib_portB;
+volatile struct inlibDevice inlib_portA;
+volatile struct inlibDevice inlib_portB;
 unsigned char inlib_port3F_last;
 
 
