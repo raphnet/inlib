@@ -82,14 +82,14 @@ read_mouse_portA:
 	ld (_inlib_portA), a
 
  	; Invert Y axis to match screen
-	ld hl, (_inlib_portA + 5)
+	ld hl, (_inlib_portA + 7)
 	xor a
 	sub l
 	ld l,a
 	sbc a,a
 	sub h
 	ld h,a
-	ld (_inlib_portA + 5), hl
+	ld (_inlib_portA + 7), hl
 
 	call _inlib_portA_TH_high
 	ret
@@ -209,14 +209,14 @@ read_mouse_portB:
 	ld (_inlib_portB), a
 
  	; Invert Y axis to match screen
-	ld hl, (_inlib_portB + 5)
+	ld hl, (_inlib_portB + 7)
 	xor a
 	sub l
 	ld l,a
 	sbc a,a
 	sub h
 	ld h,a
-	ld (_inlib_portB + 5), hl
+	ld (_inlib_portB + 7), hl
 
 
 	call _inlib_portB_TH_high
