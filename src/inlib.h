@@ -8,7 +8,7 @@
 #define INLIB_TYPE_PADDLE    0x10
 #define INLIB_TYPE_SPORTSPAD 0x20
 #define INLIB_TYPE_MDMOUSE   0x40
-#define INLIB_TYPE_TABLET    0x80
+#define INLIB_TYPE_SPORTSPAD_MARKIII 0x80
 
 // Macros to check device types
 #define INLIB_ISGAMEPAD(type)  (!(type & 0xC0))
@@ -83,24 +83,24 @@ extern struct inlibDevice inlib_portB;
 unsigned short inlib_keysPressed(unsigned char port) __z88dk_fastcall __naked;
 
 
-/* Type           |  Timeouts? | Read Function        | Detection
- * ---------------+------------+----------------------+-----------------
- * SMS            | No         | inlib_pollSMS or     | Not detectable
- *                |            | inlib_readMDpad      |
- * ---------------+------------+----------------------+-----------------
- * MD3            | Yes        | inlib_readMDpad      | Check ->type
- * ---------------+------------+----------------------+-----------------
- * MD6            | Yes        | inlib_readMDpad      | Check ->type
- * ---------------+------------+----------------------+-----------------
- * Paddle         | Yes        | inlib_readPaddle     | Check ->type
- * ---------------+------------+----------------------+-----------------
- * Sports Pad     | No         | inlib_readSportsPad  | Not perfect [1]
- * ---------------+------------+----------------------+-----------------
- * Mega Mouse     | Yes        | inlib_readMDmouse    | Check ->type
- * ---------------+------------+----------------------+-----------------
- * Sports Pad     | Yes        | TODO                 |
- * (mark III mode)|            |                      |
- * ---------------+------------+----------------------+-----------------
+/* Type           | Timeouts?  | Read Function               | Detection
+ * ---------------+------------+-----------------------------+-----------------
+ * SMS            | No         | inlib_pollSMS or            | Not detectable
+ *                |            | inlib_readMDpad             |
+ * ---------------+------------+-----------------------------+-----------------
+ * MD3            | Yes        | inlib_readMDpad             | Check ->type
+ * ---------------+------------+-----------------------------+-----------------
+ * MD6            | Yes        | inlib_readMDpad             | Check ->type
+ * ---------------+------------+-----------------------------+-----------------
+ * Paddle         | Yes        | inlib_readPaddle            | Check ->type
+ * ---------------+------------+-----------------------------+-----------------
+ * Sports Pad     | No         | inlib_readSportsPad         | Not perfect [1]
+ * ---------------+------------+-----------------------------+-----------------
+ * Mega Mouse     | Yes        | inlib_readMDmouse           | Check ->type
+ * ---------------+------------+-----------------------------+-----------------
+ * Sports Pad     | Yes        | inlib_readSportsPad_markIII | Check ->type
+ * (mark III mode)|            |                             |
+ * ---------------+------------+-----------------------------+-----------------
  *
  * [1] The sports pad returns only zeros if not moving. It can be detected
  * at start by calling inlib_readSportsPad and checking that all values
@@ -109,6 +109,10 @@ unsigned short inlib_keysPressed(unsigned char port) __z88dk_fastcall __naked;
  * The Paddle will send zeroes if set to its minimum position, but the difference
  * with a Sports Pad is that the paddle continuously toggles a button. If your game
  * must support Paddle AND Sports Pad, check for the Paddle first.
+ *
+ * The Sports Pad in Mark III mode (TH low at startup) should be detected
+ * before the Paddle. The difference is that the Sports Pad toggles both TL and TR,
+ * but the Paddle only uses only TR.
  *
  * Not that the sports pad needs some time to initialize. The Sega BIOS screen adds
  * more than enough, but on Japanese systems or systems with a modified BIOS which boots
@@ -120,6 +124,7 @@ unsigned short inlib_keysPressed(unsigned char port) __z88dk_fastcall __naked;
  *
  * 1) Call inlib_readMDmouse. Type is a mouse? - > Done
  * 2) Call inlib_readMDpad. Type is != SMS and != NONE? -> Done! (Controller is MD3 or MD6, see type)
+ * 3) Call inlib_readSportsPad_markIII. Type is mark III sportspad? Done
  * 3) Call inlib_readPaddle. Type is Paddle? -> Done
  * 4) Call inlib_readSportsPad. X/Y/Buttons are zero? -> Very likely a Sport Pad
  * 5) Assume controller is a standard SMS pad.
@@ -144,7 +149,9 @@ void inlib_readSportsPad(unsigned char port) __z88dk_fastcall __naked;
 // Reads a Mega Mouse. Sets the type to INLIB_TYPE_NONE on timeout
 void inlib_readMDmouse(unsigned char port) __naked __z88dk_fastcall;
 
-
+// Read a Sports Pad in mark III mode. This will only work on mark III,
+// or on Japanese SMS if the game quickly sets TH low at startup.
+void inlib_readSportsPad_markIII(unsigned char port) __naked __z88dk_fastcall;
 
 /* From this point, mostly internal functions and vars */
 
