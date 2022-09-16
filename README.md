@@ -57,13 +57,13 @@ and the Mega Mouse, can be detected and the type field will therefore
 be set according to the result.
 
 For instance `inlib_readMDpad(INLIB_PORTA)` will try reading the status
-of a MegaDrive controllerin port A and will set the type to INLIB_TYPE_MD6
+of a MegaDrive controller in port A and will set the type to INLIB_TYPE_MD6
 if a 6 Button controller was found, INLIB_TYPE_MD3 if it saw a 3 Button controller,
 and otherwise will set the type to INLIB_TYPE_SMS.
 
 The paddle and mega mouse functions will return the type PADDLE or MDMOUSE, but
 if a timeout occurs due to a disconnection (no data from paddle or mouse handshake timeout)
-the the type will be set to INLIB_NONE. See inlib.h for specifics.
+the type will be set to INLIB_NONE. See inlib.h for specifics.
 
 The `buttons` member holds the current button status of the controllers, similar
 to what SMS_getKeysStatus() does in SMSlib. The button definitions are:
@@ -95,7 +95,7 @@ a function to help doing this.
 unsigned short inlib_keysPressed(unsigned char port) __z88dk_fastcall __naked;
 ```
 
-Inidividual bits that are set in the returned value will represent the buttons that became
+Individual bits that are set in the returned value will represent the buttons that became
 pressed just now, similar to SMS_getKeysPressed().
 
 For controllers that are not only buttons (i.e. mouse, paddle, etc) the additional
@@ -136,7 +136,7 @@ and when linking, simply pass ../inlib/inlib.lib after your object files.
 Controller Auto detection
 -------------------------
 
-Inlib does not need to provide functions specificall for detection, since
+Inlib does not need to provide functions specifically for detection, since
 the actual read functions for the supported type of controllers will set the
 type field according to the result. See the table below:
 
@@ -192,7 +192,7 @@ Ideas and things to test, review, etc.
  - The using the larger North American Sports Pad
  - Add an optimised function to read Megadrive controllers in both ports in parallel
  - The implementation is probably too careful about not touching the other
- port's bits in port 3F (see inlib_port3F_last and the set of functinos...)
+ port's bits in port 3F (see inlib_port3F_last and the related set of functions...)
 
 
 License
