@@ -182,10 +182,21 @@ order that should work well:
 See the example program for more information.
 
 
+TODO
+---------------------
+
+Ideas and things to test, review, etc.
+
+ - Add light gun support
+ - Test using a Sega Mouse (the mouse with two colored buttons)
+ - The using the larger North American Sports Pad
+ - Add an optimised function to read Megadrive controllers in both ports in parallel
+ - The implementation is probably too careful about not touching the other
+ port's bits in port 3F (see inlib_port3F_last and the set of functinos...)
+
 
 License
 --------
 
 This is free and unencumbered software released into the public domain. See the file UNLICENSE for details.
-
 
