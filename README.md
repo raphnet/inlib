@@ -142,22 +142,14 @@ type field according to the result. See the table below:
 
 
 | Type           | Timeouts?  | Read Function               | Detection        |
-| ---------------+------------+-----------------------------+----------------- |
-| SMS            | No         | inlib_pollSMS or            | Not detectable   |
-|                |            | inlib_readMDpad             |                  |
-| ---------------+------------+-----------------------------+----------------- |
+| ---------------|------------|-----------------------------|----------------- |
+| SMS            | No         | inlib_pollSMS or inlib_readMDpad    | Not detectable   |
 | MD3            | Yes        | inlib_readMDpad             | Check ->type     |
-| ---------------+------------+-----------------------------+----------------- |
 | MD6            | Yes        | inlib_readMDpad             | Check ->type     |
-| ---------------+------------+-----------------------------+----------------- |
 | Paddle         | Yes        | inlib_readPaddle            | Check ->type     |
-| ---------------+------------+-----------------------------+----------------- |
 | Sports Pad     | No         | inlib_readSportsPad         | Not perfect [1]  |
-| ---------------+------------+-----------------------------+----------------- |
 | Mega Mouse     | Yes        | inlib_readMDmouse           | Check ->type     |
-| ---------------+------------+-----------------------------+----------------- |
-| Sports Pad     | Yes        | inlib_readSportsPad_markIII | Check ->type     |
-| (mark III mode)|            |                             |                  |
+| Sports Pad (mark III mode)    | Yes        | inlib_readSportsPad_markIII | Check ->type     |
 
 
 [1] The sports pad returns only zeros if not moving. It can be detected
