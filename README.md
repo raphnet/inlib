@@ -205,6 +205,7 @@ Ideas and things to test, review, etc.
  - The implementation is probably too careful about not touching the other
  port's bits in port 3F (see inlib_port3F_last and the related set of functions...)
  - Add Terebi Oekaki and/or drawing board support.
+ - Add Megadrive multitap support
 
 
 License
