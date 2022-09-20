@@ -166,6 +166,8 @@ void inlib_getportB(void) __naked __z88dk_fastcall __preserves_regs(b,c,d,e,iyl,
 
 // Functions to configure TH and TR in particular ways. Use inlib_port3F_last to avoid
 // side effects.
+void inlib_portA_TH_in_TR_in(void) __naked __z88dk_fastcall;
+void inlib_portB_TH_in_TR_in(void) __naked __z88dk_fastcall;
 void inlib_portA_TH_out_TR_in(void) __naked __z88dk_fastcall;
 void inlib_portB_TH_out_TR_in(void) __naked __z88dk_fastcall;
 void inlib_portA_TH_out_TR_out(void) __naked __z88dk_fastcall;

@@ -82,6 +82,28 @@ void inlib_getportB(void) __naked __z88dk_fastcall __preserves_regs(b,c,d,e,iyl,
 	__endasm;
 }
 
+void inlib_portA_TH_in_TR_in(void) __naked __z88dk_fastcall
+{
+	__asm
+	ld a, (_inlib_port3F_last)  ; Get last written value
+	or a, #0x03                 ; Set TR and TH to 1 (input)
+	out (0x3F), a               ; Write to port
+	ld (_inlib_port3F_last), a  ; Save last written value
+	ret
+	__endasm;
+}
+
+void inlib_portB_TH_in_TR_in(void) __naked __z88dk_fastcall
+{
+	__asm
+	ld a, (_inlib_port3F_last)  ; Get last written value
+	or a, #0x0C                 ; Set TR and TH to 1 (input)
+	out (0x3F), a               ; Write to port
+	ld (_inlib_port3F_last), a  ; Save last written value
+	ret
+	__endasm;
+}
+
 void inlib_portA_TH_out_TR_in(void) __naked __z88dk_fastcall
 {
 	__asm
