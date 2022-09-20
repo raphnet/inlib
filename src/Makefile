@@ -8,7 +8,7 @@ PEEP_OPTIONS=#--peep-file peep-rules.txt
 CFLAGS=-mz80 $(OPT) $(CONFIG)
 OUTPUT_LIBS=inlib.lib
 
-SRCS=inlib.c inlib_mdpad.c inlib_paddle.c inlib_sportspad.c inlib_mdmouse.c inlib_sportspad_markIII.c
+SRCS=inlib.c inlib_mdpad.c inlib_paddle.c inlib_sportspad.c inlib_mdmouse.c inlib_sportspad_markIII.c inlib_phaser.c
 
 OBJS=$(patsubst %.c,%.rel,$(SRCS))
 

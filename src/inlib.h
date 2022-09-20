@@ -10,6 +10,13 @@
 #define INLIB_TYPE_MDMOUSE   0x40
 #define INLIB_TYPE_SPORTSPAD_MARKIII 0x80
 
+// The light phaser is a bit special - the type
+// changes depending on if light was detected
+// or not. Absolute coordinates are present only if
+// the type is INLIB_TYPE_PHASER_HIT
+#define INLIB_TYPE_PHASER      0x04
+#define INLIB_TYPE_PHASER_HIT  0x81
+
 // Macros to check device types
 #define INLIB_ISGAMEPAD(type)  (!(type & 0xC0))
 #define INLIB_ISPADDLE(type) (type & 0x10)
@@ -49,7 +56,7 @@ struct inlibDevice {
 #define INLIB_BTN_DOWN     0x02
 #define INLIB_BTN_LEFT     0x04
 #define INLIB_BTN_RIGHT    0x08
-#define INLIB_BTN_1        0x10 // Also MDpad B, Paddle button, mouse Left button
+#define INLIB_BTN_1        0x10 // Also MDpad B, Paddle button, mouse Left button, phase trigger
 #define INLIB_BTN_START    (INLIB_BTN_1)
 #define INLIB_BTN_2        0x20 // Also MDpad C, mouse right button
 #define INLIB_BTN_MD_A     0x40 // Also mouse Middle butotn
@@ -88,6 +95,7 @@ unsigned short inlib_keysStatus(unsigned char port) __z88dk_fastcall __naked;
 //
 // Bit field of INLIB_BTN_*
 unsigned short inlib_keysPressed(unsigned char port) __z88dk_fastcall __naked;
+
 
 
 /* Type           | Timeouts?  | Read Function               | Detection
@@ -159,6 +167,31 @@ void inlib_readMDmouse(unsigned char port) __naked __z88dk_fastcall;
 // Read a Sports Pad in mark III mode. This will only work on mark III,
 // or on Japanese SMS if the game quickly sets TH low at startup.
 void inlib_readSportsPad_markIII(unsigned char port) __naked __z88dk_fastcall;
+
+// Read the light phaser button status. This is equivalent to reading a SMS
+// controller, but only Button 1 exists and the type will always be set
+// to INLIB_TYPE_PHASER.
+//
+// This function, unlike inlib_pollLightPhaser_frame() returns very quickly.
+void inlib_pollLightPhaser_trigger(unsigned char port) __naked __z88dk_fastcall;
+
+// Read the light phaser position. Due to how this works, this function runs
+// for a full frame.
+//
+// You should call it before Vblank ends and it will return after the end
+// of active display. In many games this will consume too much time to fully run
+// a frame of logic, so you may want to only call this function only once after
+// inlib_pollLightPhaser_trigger reports that the trigger was been pulled.
+//
+// If light is seen, the type will be set to INLIB_TYPE_PHASER_HIT and in addition to
+// the trigger status in the button member, the sensed screen coordinates will be stored
+// in abs.x/abs.y. Otherwise the type will be set to INLIB_TYPE_PHASER and only the trigger
+// status will be updated.
+//
+// Depending on your game, before calling this you may want to brigten the colors or draw a
+// solid box over the target to make sure it is detected reliably by the light gun.
+void inlib_pollLightPhaser_position(unsigned char port) __naked __z88dk_fastcall;
+
 
 /* From this point, mostly internal functions and vars */
 

@@ -1,2 +1,6 @@
+Version 1.1 - 2022-09-20
+ - Add Light Phaser support
+ - Add SMS_getKeysStatus()
+
 Version 1.0 - 2022-09-16
  - Initial release

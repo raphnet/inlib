@@ -151,7 +151,18 @@ type field according to the result. See the table below:
 | Sports Pad     | No         | inlib_readSportsPad         | Not perfect [1]  |
 | Mega Mouse     | Yes        | inlib_readMDmouse           | Check ->type     |
 | Sports Pad (mark III mode)    | Yes        | inlib_readSportsPad_markIII | Check ->type     |
+| Light phaser   | Yes[2]     | inlib_pollLightPhaser_trigger and inlib_pollLightPhaser_position | With user cooperation[2] |
 
+
+[2] The light phaser position read code will not hang even with defective light
+phasers (for instance, one with a shorted cable which pulls TH low indefinitely).
+The code timeouts at the end of the frame. The returned type will be 
+INLIB_TYPE_PHASER or INLIB_TYPE_PHASER_HIT, depending on whether light was
+sensed, but this cannot be used to detect the light phaser itself without
+user cooperation. For instance, one could display something such as "shoot at 
+the screen to play with a light phaser", wait for button 1 / trigger to be pushed,
+and then, if a position is reported, conclude that a light phaser is present and
+enable the corresponding game mode.
 
 [1] The sports pad returns only zeros if not moving. It can be detected
 at start by calling inlib_readSportsPad and checking that all values
@@ -188,12 +199,12 @@ TODO
 
 Ideas and things to test, review, etc.
 
- - Add light gun support
  - Test using a Sega Mouse (the mouse with two colored buttons)
  - The using the larger North American Sports Pad
  - Add an optimised function to read Megadrive controllers in both ports in parallel
  - The implementation is probably too careful about not touching the other
  port's bits in port 3F (see inlib_port3F_last and the related set of functions...)
+ - Add Terebi Oekaki and/or drawing board support.
 
 
 License
