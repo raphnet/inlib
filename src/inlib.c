@@ -284,6 +284,24 @@ void inlib_init(void)
 
 }
 
+unsigned short inlib_keysStatus(unsigned char port) __z88dk_fastcall __naked
+{
+  __asm
+
+	ld a, l
+	or a
+	jp nz, keys_status_port2
+
+keys_status_port1:
+	ld hl, (#_inlib_portA + 1) ; Read current button bits
+  ret
+keys_status_port2:
+	ld hl, (#_inlib_portB + 1) ; Read current button bits
+  ret
+
+  __endasm;
+}
+
 unsigned short inlib_keysPressed(unsigned char port) __z88dk_fastcall __naked
 {
 	__asm

@@ -78,6 +78,11 @@ void inlib_init(void);
 extern volatile struct inlibDevice inlib_portA;
 extern volatile struct inlibDevice inlib_portB;
 
+// Returns the current status of the button bits for the specified ports.
+//
+// Bit field of INLIB_BTN_*
+unsigned short inlib_keysStatus(unsigned char port) __z88dk_fastcall __naked;
+
 // Looks at current a previous buttons bits for specified port and returns
 // bits set for newly pressed buttons (button down events).
 //

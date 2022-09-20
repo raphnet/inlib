@@ -65,8 +65,9 @@ The paddle and mega mouse functions will return the type PADDLE or MDMOUSE, but
 if a timeout occurs due to a disconnection (no data from paddle or mouse handshake timeout)
 the type will be set to INLIB_NONE. See inlib.h for specifics.
 
-The `buttons` member holds the current button status of the controllers, similar
-to what SMS_getKeysStatus() does in SMSlib. The button definitions are:
+You can access the `buttons` member to check the current button status of the controllers, 
+or use inlib_keysStatus(). This is equivalent to SMS_getKeysStatus() in SMSlib.
+The button definitions are:
 
 ```
 #define INLIB_BTN_UP       0x01
