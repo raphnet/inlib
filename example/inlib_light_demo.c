@@ -116,4 +116,4 @@ void main(void)
 }
 
 SMS_EMBED_SEGA_ROM_HEADER(9999,0);
-SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"raphnet","inlib demo","A simple controller test using inlib");
+SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"raphnet","inlib demo","A simple Light Phaser test using inlib");
