@@ -113,57 +113,6 @@ unsigned short inlib_keysStatus(unsigned char port) __z88dk_fastcall __naked;
 unsigned short inlib_keysPressed(unsigned char port) __z88dk_fastcall __naked;
 
 
-
-/* Type           | Timeouts?  | Read Function               | Detection
- * ---------------+------------+-----------------------------+-----------------
- * SMS            | No         | inlib_pollSMS or            | Not detectable
- *                |            | inlib_readMDpad             |
- * ---------------+------------+-----------------------------+-----------------
- * MD3            | Yes        | inlib_readMDpad             | Check ->type
- * ---------------+------------+-----------------------------+-----------------
- * MD6            | Yes        | inlib_readMDpad             | Check ->type
- * ---------------+------------+-----------------------------+-----------------
- * Paddle         | Yes        | inlib_readPaddle            | Check ->type
- * ---------------+------------+-----------------------------+-----------------
- * Sports Pad     | No         | inlib_readSportsPad         | Not perfect [1]
- * ---------------+------------+-----------------------------+-----------------
- * Mega Mouse     | Yes        | inlib_readMDmouse           | Check ->type
- * ---------------+------------+-----------------------------+-----------------
- * Sports Pad     | Yes        | inlib_readSportsPad_markIII | Check ->type
- * (mark III mode)|            |                             |
- * ---------------+------------+-----------------------------+-----------------
- *
- * [1] The sports pad returns only zeros if not moving. It can be detected
- * at start by calling inlib_readSportsPad and checking that all values
- * are zero (no buttons and no X/Y motion).
- *
- * The Paddle will send zeroes if set to its minimum position, but the difference
- * with a Sports Pad is that the paddle continuously toggles a button. If your game
- * must support Paddle AND Sports Pad, check for the Paddle first.
- *
- * The Sports Pad in Mark III mode (TH low at startup) should be detected
- * before the Paddle. The difference is that the Sports Pad toggles both TL and TR,
- * but the Paddle only uses only TR.
- *
- * Not that the sports pad needs some time to initialize. The Sega BIOS screen adds
- * more than enough, but on Japanese systems or systems with a modified BIOS which boots
- * directly, detection may be done too early. The best method to detect the sports
- * Pad is to wait 1 second after power up. After displaying your logo for instance.
- *
- * If all supported devices are to be auto-detected by your game, here is a suggested
- * order that should work well:
- *
- * 1) Call inlib_readMDmouse. Type is a mouse? - > Done
- * 2) Call inlib_readMDpad. Type is != SMS and != NONE? -> Done! (Controller is MD3 or MD6, see type)
- * 3) Call inlib_readSportsPad_markIII. Type is mark III sportspad? Done
- * 3) Call inlib_readPaddle. Type is Paddle? -> Done
- * 4) Call inlib_readSportsPad. X/Y/Buttons are zero? -> Very likely a Sport Pad
- * 5) Assume controller is a standard SMS pad.
- *
- * See the example program for more information.
- */
-
-
 // Reads a standard SMS gamepad. Cannot fail.
 void inlib_pollSMS(unsigned char port) __naked __z88dk_fastcall;
 

@@ -26,6 +26,7 @@ struct inlibDevice {
 		struct inlib_relative_data rel;
 		struct inlib_absolute_data abs;
 		struct inlib_paddle_data paddle;
+    struct inlib_graphicboard_data graph;
 	};
 };
 ```
@@ -44,9 +45,12 @@ controllers will always update this field. Existing types are:
  - INLIB_TYPE_MD3
  - INLIB_TYPE_MD6
  - INLIB_TYPE_PADDLE
+ - INLIB_TYPE_GRAPHIC_BOARD
  - INLIB_TYPE_SPORTSPAD
  - INLIB_TYPE_MDMOUSE
  - INLIB_TYPE_SPORTSPAD_MARKIII
+ - INLIB_TYPE_PHASER
+ - INLIB_TYPE_PHASER_HIT
 
 SMS controllers cannot be detected (there is no difference between connected
 and disconnected controllers), so `inlib_pollSMS(INLIB_PORTA)` will always
@@ -111,11 +115,12 @@ values will be placed in one of the union members. You could look at the type me
 determine which one to access, but inlib also provides the following macros:
 
 ```
-INLIB_ISGAMEPAD(type)    // Only buttons
-INLIB_ISPADDLE(type)     // Paddle type (values in paddle.value)
-INLIB_ISRELATIVE(type)   // Relative 8 bit signed (values in rel.x and rel.y)
-INLIB_ISRELATIVE16(type) // Relative 16 bit signed (values in rel16.x and rel16.y)
-INLIB_ISABSOLUTE(type)   // Absolute 8 bit position (values in abs.x and abs.y)
+INLIB_ISGAMEPAD(type)      // Only buttons
+INLIB_ISPADDLE(type)       // Paddle type (values in paddle.value)
+INLIB_ISGRAPHICBOARD(type) // Graphic Board type (values in graph.x/y/pressure)
+INLIB_ISRELATIVE(type)     // Relative 8 bit signed (values in rel.x and rel.y)
+INLIB_ISRELATIVE16(type)   // Relative 16 bit signed (values in rel16.x and rel16.y)
+INLIB_ISABSOLUTE(type)     // Absolute 8 bit position (values in abs.x and abs.y)
 ```
 
 How to use in your project
