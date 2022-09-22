@@ -18,16 +18,16 @@ inlib.h declares struct inlibDevice like this:
 
 ```
 struct inlibDevice {
-	unsigned char type;
-	unsigned short buttons;
-	unsigned short prev_buttons;
-	union {
-		struct inlib_16bit_relative_data rel16;
-		struct inlib_relative_data rel;
-		struct inlib_absolute_data abs;
-		struct inlib_paddle_data paddle;
+  unsigned char type;
+  unsigned short buttons;
+  unsigned short prev_buttons;
+  union {
+    struct inlib_16bit_relative_data rel16;
+    struct inlib_relative_data rel;
+    struct inlib_absolute_data abs;
+    struct inlib_paddle_data paddle;
     struct inlib_graphicboard_data graph;
-	};
+  };
 };
 ```
 
