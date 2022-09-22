@@ -14,7 +14,7 @@ INLIB_LIB=$(INLIB_BASE)/inlib.lib
 CFLAGS=-mz80 -I$(SMSLIB_INCDIR) --peep-file $(PEEP_RULES) -I$(INLIB_INCDIR)
 LDFLAGS=--no-std-crt0 --data-loc 0xC000
 
-ROMS=inlib_demo.sms inlib_light_demo.sms
+ROMS=inlib_demo.sms inlib_light_demo.sms inlib_graphic_board_demo.sms
 
 all: $(ROMS)
 

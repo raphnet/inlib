@@ -86,6 +86,13 @@ The button definitions are:
 // Extra definitions for convenience
 #define INLIB_BTN_START    (INLIB_BTN_1)
 #define INLIB_BTN_ANYDIR   (INLIB_BTN_UP|INLIB_BTN_DOWN|INLIB_BTN_LEFT|INLIB_BTN_RIGHT)
+
+// When active, it means the pen is touching the board
+#define INLIB_BTN_GRAF_PEN_DOWN  INLIB_BTN_1
+// Mode Select Switches (order needs to be confirmed)
+#define INLIB_BTN_GRAF_1         INLIB_BTN_2
+#define INLIB_BTN_GRAF_2         INLIB_BTN_MD_A
+#define INLIB_BTN_GRAF_3         INLIB_BTN_START
 ```
 
 The `prev_buttons` member holds the state of the buttons the last time the port was
@@ -152,6 +159,23 @@ type field according to the result. See the table below:
 | Mega Mouse     | Yes        | inlib_readMDmouse           | Check ->type     |
 | Sports Pad (mark III mode)    | Yes        | inlib_readSportsPad_markIII | Check ->type     |
 | Light phaser   | Yes[2]     | inlib_pollLightPhaser_trigger and inlib_pollLightPhaser_position | With user cooperation[2] |
+| Graphic Board | No         | inlib_readGraphicBoard     | With user cooperation[3] |
+
+
+[3] When no Graphic board is present, or a SMS controller is connected,
+The X,Y coordinates read as 0xFF. In this case, the read function sets the
+type to INLIB_TYPE_NONE as this is deemed impossible on real hardware. But
+this simple test is far from perfect. The Sports Pad, Paddles (except when
+reading 0xFF) and SMS controllers (if any direction is pressed) will all get
+past this simple test.
+
+The pressure returned in the graph->pressure member is typically in the
+0xFD to 0xFF range when the pen is touching the surface. Also, when the pen
+is touching the surface, the INLIB_BTN_1 / INLIB_BTN_GRAF_PEN_DOWN bit will
+be set in the button status. This can potentially be used to achieve more reliable
+detection. For instance, asking the user to click on the tablet with the
+pen, and then check if a valid pressure value is read at the same time as the
+INLIB_BTN_GRAF_PEN_DOWN activates.
 
 
 [2] The light phaser position read code will not hang even with defective light

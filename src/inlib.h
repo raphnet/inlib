@@ -6,6 +6,7 @@
 #define INLIB_TYPE_MD3	     0x02
 #define INLIB_TYPE_MD6	     0x03
 #define INLIB_TYPE_PADDLE    0x10
+#define INLIB_TYPE_GRAPHIC_BOARD 0x11
 #define INLIB_TYPE_SPORTSPAD 0x20
 #define INLIB_TYPE_MDMOUSE   0x40
 #define INLIB_TYPE_SPORTSPAD_MARKIII 0x80
@@ -19,10 +20,17 @@
 
 // Macros to check device types
 #define INLIB_ISGAMEPAD(type)  (!(type & 0xC0))
-#define INLIB_ISPADDLE(type) (type & 0x10)
+#define INLIB_ISPADDLE(type) (type == INLIB_TYPE_PADDLE)
+#define INLIB_ISGRAPHICBOARD(type) (type == INLIB_GRAPHIC_BOARD)
 #define INLIB_ISRELATIVE(type) (type & 0x20)
 #define INLIB_ISRELATIVE16(type) (type & 0x40)
 #define INLIB_ISABSOLUTE(type) (type & 0x80)
+
+struct inlib_graphicboard_data {
+  unsigned char pressure;
+  unsigned char x;
+  unsigned char y;
+};
 
 struct inlib_absolute_data {
 	unsigned char x, y;
@@ -49,6 +57,7 @@ struct inlibDevice {
 		struct inlib_relative_data rel;
 		struct inlib_absolute_data abs;
 		struct inlib_paddle_data paddle;
+    struct inlib_graphicboard_data graph;
 	};
 };
 
@@ -65,6 +74,13 @@ struct inlibDevice {
 #define INLIB_BTN_MD_Y     0x200
 #define INLIB_BTN_MD_X     0x400
 #define INLIB_BTN_MD_MODE  0x800
+
+// When active, it means the pen is touching the board
+#define INLIB_BTN_GRAF_PEN_DOWN  INLIB_BTN_1
+// Mode Select Switches (order needs to be confirmed)
+#define INLIB_BTN_GRAF_1         INLIB_BTN_2
+#define INLIB_BTN_GRAF_2         INLIB_BTN_MD_A
+#define INLIB_BTN_GRAF_3         INLIB_BTN_START
 
 #define INLIB_BTN_ANYDIR   (INLIB_BTN_UP|INLIB_BTN_DOWN|INLIB_BTN_LEFT|INLIB_BTN_RIGHT)
 
@@ -192,6 +208,23 @@ void inlib_pollLightPhaser_trigger(unsigned char port) __naked __z88dk_fastcall;
 // solid box over the target to make sure it is detected reliably by the light gun.
 void inlib_pollLightPhaser_position(unsigned char port) __naked __z88dk_fastcall;
 
+// Reads the status of a Graphic Board.
+//
+// When no Graphic board is present, or a SMS controller is connected,
+// The X,Y coordinates read as 0xFF. In this case, this function
+// returns INLIB_TYPE_NONE as this is deemed impossible on real hardware,
+// but this simple test is far from perfect. The Sports Pad, Paddles
+// (except when reading 0xFF) and SMS controllers (when buttons are pressed)
+// will all get past this simple test.
+//
+// The pressure returned in the graph->pressure member is typically in the
+// 0xFD to 0xFF range when the pen is touching the surface. Also, when the pen
+// is touching the surface, the INLIB_BTN_1 / INLIB_BTN_GRAF_PEN_DOWN bit will
+// be set in the button status.
+//
+// The "Mode Select" buttons are defined as INLIB_BTN_GRAF_1/2/3 but I am
+// uncertain if they match the order of their physical counterparts.
+void inlib_readGraphicBoard(unsigned char port) __z88dk_fastcall __naked;
 
 /* From this point, mostly internal functions and vars */
 
