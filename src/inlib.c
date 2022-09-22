@@ -49,7 +49,8 @@ volatile struct inlibDevice inlib_portA;
 volatile struct inlibDevice inlib_portB;
 unsigned char inlib_port3F_last;
 
-
+// The return value is in L according to __z88dk_fastcall, but
+// also in A so assembly code can use A directly.
 void inlib_getportA(void) __naked __z88dk_fastcall __preserves_regs(b,c,d,e,iyl,iyh)
 {
 	__asm
@@ -63,6 +64,8 @@ void inlib_getportA(void) __naked __z88dk_fastcall __preserves_regs(b,c,d,e,iyl,
 	__endasm;
 }
 
+// The return value is in L according to __z88dk_fastcall, but
+// also in A so assembly code can use A directly.
 void inlib_getportB(void) __naked __z88dk_fastcall __preserves_regs(b,c,d,e,iyl,iyh)
 {
 	__asm
